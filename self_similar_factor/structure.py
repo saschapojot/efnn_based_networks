@@ -60,16 +60,23 @@ class self_similar_factor_layer(nn.Module):
 
 
 class self_similar_model(nn.Module):
-    """
+    r"""
     The full model that grows layer by layer.
     Formula: F_L = A * \prod_{i=0}^L (1 + a_i * x)^{n_i}
     """
 
-    def __init__(self, input_dim, output_dim, num_layers):
+    def __init__(self, input_dim, output_dim, num_layers, A_val=None):
         super().__init__()
         self.input_dim = input_dim
         self.output_dim = output_dim
-        self.A = nn.Parameter(torch.randn(1, output_dim, dtype=torch.float))
+
+        if A_val is None:
+            # A is a learnable parameter
+            self.A = nn.Parameter(torch.randn(1, output_dim, dtype=torch.float))
+        else:
+            # A is a fixed constant
+            A_tensor = torch.full((1, output_dim), float(A_val), dtype=torch.float)
+            self.register_buffer('A', A_tensor)
 
         # Instantiate all layers upfront
         self.layers = nn.ModuleList([
@@ -89,9 +96,8 @@ class self_similar_model(nn.Module):
         return F_val, total_reg_loss
 
 
-
 # Define a custom dataset
-class custom_dataset(Dataset):
+class CustomDataset(Dataset):
     def __init__(self, X, Y):
         self.X = X
         self.Y = Y
