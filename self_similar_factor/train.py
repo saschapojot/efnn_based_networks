@@ -14,7 +14,7 @@ if (len(sys.argv)!=3):
 data_dir=str(sys.argv[1])
 
 num_epochs = int(sys.argv[2])
-learning_rate = 1e-2
+learning_rate = 0.5e-1
 learning_rate_final=1e-3
 weight_decay = 1e-5
 decrease_over = 50
@@ -44,9 +44,9 @@ train_loader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=
 
 input_dim=1
 output_dim=1
-num_layers=12 #layers 0,1,2,3,.. num_layers
+num_layers=3 #layers 0,1,2,3,.. num_layers
 # A=1
-model=self_similar_model(1,1,3).to(device)
+model=self_similar_model(1,1,num_layers).to(device)
 
 # Optimizer, scheduler
 optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate, weight_decay=weight_decay)

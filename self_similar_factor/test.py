@@ -15,6 +15,7 @@ if len(sys.argv) != 2:
 data_dir = str(sys.argv[1])
 
 in_pkl_test_file = data_dir + "/test_dataset.pkl"
+in_pkl_train_file = data_dir + "/train_dataset.pkl" # Added to find training bounds
 weights_file = data_dir + "/model_weights.pth"
 
 # Define device
@@ -31,6 +32,19 @@ Y_test = test_data['Y_test']
 
 X_test_tensor = torch.tensor(X_test, dtype=torch.float32).to(device)
 Y_test_tensor = torch.tensor(Y_test, dtype=torch.float32).to(device)
+
+# 1.5 Load training data to find the X bounds for plotting
+has_train_bounds = False
+try:
+    with open(in_pkl_train_file, "rb") as fptr:
+        train_data = pickle.load(fptr)
+    X_train = train_data['X_train']
+    train_min_x = np.min(X_train)
+    train_max_x = np.max(X_train)
+    has_train_bounds = True
+    print(f"Training data bounds found: [{train_min_x:.4f}, {train_max_x:.4f}]")
+except FileNotFoundError:
+    print(f"Warning: {in_pkl_train_file} not found. Cannot mark training range on plot.")
 
 # 2. Instantiate the model
 # NOTE: In your train.py, you instantiated the model with 3 layers: model=self_similar_model(1,1,3).
@@ -96,6 +110,15 @@ predictions_real = np.real(predictions_np)
 
 # 7. Plot the results
 plt.figure(figsize=(10, 6))
+
+# Mark the training range if we successfully loaded the training data
+if has_train_bounds:
+    # Adds a light gray shaded region for the training data range
+    plt.axvspan(train_min_x, train_max_x, color='gray', alpha=0.2, label="Training Data Range")
+    # Adds dotted vertical lines at the exact boundaries
+    plt.axvline(x=train_min_x, color='gray', linestyle=':')
+    plt.axvline(x=train_max_x, color='gray', linestyle=':')
+
 plt.plot(X_test, Y_test, label="True Function (Exact)", color='blue', linewidth=2)
 plt.plot(X_test, predictions_real, label="Model Prediction", color='red', linestyle='dashed', linewidth=2)
 

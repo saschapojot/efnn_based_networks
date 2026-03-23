@@ -16,9 +16,9 @@ def func_exact(x):
     return part0*part1*part2*part3
 
 
-def generate_data(num_train, num_test, x_min=0.0, x_max=10.0):
+def generate_X_train(num_train, x_min=0.0, x_max=10.0):
     """
-    Generates training and testing data in the range [x_min, x_max].
+    Generates training input data in the range [x_min, x_max] with boundary points included.
     """
     X_random = np.random.uniform(x_min, x_max, size=(num_train - 2, 1))
 
@@ -27,17 +27,22 @@ def generate_data(num_train, num_test, x_min=0.0, x_max=10.0):
 
     # Combine the random points and the boundary points
     X_train = np.vstack((X_random, X_boundaries))
+
     # Shuffle the training data so the boundaries aren't always at the very end
     np.random.shuffle(X_train)
 
-    # Calculate Y_train
-    Y_train = func_exact(X_train)
+    return X_train
 
-    # 2. Generate Testing Data
+
+def generate_X_test(num_test, x_min=0.0, x_max=10.0):
+    """
+    Generates testing input data evenly spaced in the range [x_min, x_max].
+    """
     # Using linspace for testing data to plot a smooth curve later
     X_test = np.linspace(x_min, x_max, num_test).reshape(-1, 1)
-    Y_test = func_exact(X_test)
-    return X_train, Y_train, X_test, Y_test
+    return X_test
+
+
 
 
 
@@ -48,7 +53,13 @@ num_train=500
 num_test=500
 x_min=0
 x_max=10
-X_train, Y_train, X_test, Y_test = generate_data(num_train,num_test,x_min,x_max)
+x_test_max=15
+# 1. Generate X_train and Y_train separately
+X_train = generate_X_train(num_train, x_min, x_max)
+Y_train = func_exact(X_train)
+# 2. Generate X_test and Y_test separately
+X_test = generate_X_test(num_test, x_min, x_test_max)
+Y_test = func_exact(X_test)
 
 print(f"X_train shape: {X_train.shape}, Y_train shape: {Y_train.shape}")
 print(f"X_test shape: {X_test.shape}, Y_test shape: {Y_test.shape}")
