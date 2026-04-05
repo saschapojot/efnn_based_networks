@@ -65,10 +65,10 @@ a = 0.0          # Left boundary x = 0
 b = 1.0          # Right boundary x = 1
 fa = 0         # y(0) = 1
 fb = 2         # y(1) = 0
-eps = 0.01         # The epsilon parameter in your PDE
+eps = 0.1         # The epsilon parameter in your PDE
 
-learning_rate = 1e-1
-learning_rate_final = 1e-5
+learning_rate = 1e-2
+learning_rate_final = 1e-4
 weight_decay = 1e-5
 decrease_over = 50
 
@@ -82,7 +82,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print("device=" + str(device))
 
 batch_size = 50 # Define batch size
-num_collocation_points = 50000
+num_collocation_points = 1000
 
 # --- 2. Initialize Model, Optimizer, and Scheduler ---
 # Create the model and move it to the selected device
