@@ -60,14 +60,14 @@ data_dir = "./output"
 # --- 1. Initialize parameters and model ---
 in_dim = 1
 num_layers = 3
-num_neurons = 6
-a = 0.0          # Left boundary x = 0
+num_neurons = 3
+a = -1         # Left boundary x = -1
 b = 1.0          # Right boundary x = 1
-fa = 0         # y(0) = 1
-fb = 2         # y(1) = 0
-eps = 0.01         # The epsilon parameter in your PDE
+fa = 0         # y(0) = 0
+fb = 2         # y(1) = 2
+eps = 0.05         # The epsilon parameter in your PDE
 
-learning_rate = 1e-1
+learning_rate = 1e-2
 learning_rate_final = 1e-5
 weight_decay = 1e-5
 decrease_over = 50
@@ -82,7 +82,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print("device=" + str(device))
 
 batch_size = 50 # Define batch size
-num_collocation_points = 50000
+num_collocation_points = 1000
 
 # --- 2. Initialize Model, Optimizer, and Scheduler ---
 # Create the model and move it to the selected device
@@ -135,10 +135,10 @@ for epoch in range(1, num_epochs + 1):
 
         # Calculate the physics loss for the current batch
         loss = physics_loss(model, x_batch)
-
+        torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=10.0)
         # Backpropagation
         loss.backward()
-        torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=10.0)
+
 
         # Update weights
         optimizer.step()

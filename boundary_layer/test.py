@@ -34,12 +34,12 @@ def exact_solution(x, a, b, fa, fb, eps):
 # --- 1. Parameters (Must match train.py) ---
 in_dim = 1
 num_layers = 3
-num_neurons = 6
-a = 0.0
+num_neurons = 3
+a = -1
 b = 1.0
 fa = 0         # y(0) = 1
 fb = 2         # y(1) = 0
-eps = 0.05
+eps = 0.1
 
 data_dir = "./output"
 model_path = os.path.join(data_dir, f"pinn_model_eps{eps}.pth")
@@ -89,7 +89,7 @@ plt.plot(x_np, y_exact_np, label="Analytical Solution", color='blue', linewidth=
 plt.plot(x_np, y_pred_np, label="PINN Prediction", color='red', linestyle='--', linewidth=2.5)
 
 # Formatting the plot
-plt.title(f"PINN vs Analytical Solution (eps={eps})", fontsize=14)
+plt.title(f"EFNN+PINN vs Analytical Solution (eps={eps})", fontsize=14)
 plt.xlabel("x", fontsize=12)
 plt.ylabel("y(x)", fontsize=12)
 plt.grid(True, linestyle=':', alpha=0.7)
