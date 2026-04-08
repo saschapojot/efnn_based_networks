@@ -59,8 +59,8 @@ data_dir = "./output"
 
 # --- 1. Initialize parameters and model ---
 in_dim = 1
-num_layers = 3
-num_neurons = 3
+num_layers = 6
+num_neurons = 10
 a = -1         # Left boundary x = -1
 b = 1.0          # Right boundary x = 1
 fa = 0         # y(0) = 0
@@ -68,7 +68,7 @@ fb = 2         # y(1) = 2
 eps = 0.05         # The epsilon parameter in your PDE
 
 learning_rate = 1e-2
-learning_rate_final = 1e-5
+learning_rate_final = 1e-7
 weight_decay = 1e-5
 decrease_over = 50
 

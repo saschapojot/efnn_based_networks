@@ -49,12 +49,13 @@ class efnn(nn.Module):
 
         E_raw = S.sum(dim=1, keepdim=True)  # Sum over all elements for each sample
         # --- HARD CONSTRAINT ENFORCEMENT ---
-        dist_left=torch.norm(x - self.a, p=2, dim=1, keepdim=True)
-        dist_right=torch.norm( self.b-x, p=2, dim=1, keepdim=True)
+        dist_left = x - self.a
+        dist_right = self.b - x
+
         # 1. Boundary Interpolation (Exact at boundaries)
         # When x = a, dist_left = 0, so this term becomes exactly fa
         # When x = b, dist_right = 0, so this term becomes exactly fb
-        boundary_interp = (dist_right * self.fa + dist_left * self.fb) / (dist_left + dist_right )
+        boundary_interp = (dist_right * self.fa + dist_left * self.fb) / (self.b - self.a)
         # 2. Network Contribution (Zero at boundaries)
         # Multiplying E_raw by (dist_left * dist_right) ensures the network's
         # output is zeroed out at x=a and x=b.

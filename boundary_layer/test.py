@@ -39,7 +39,7 @@ a = -1
 b = 1.0
 fa = 0         # y(0) = 1
 fb = 2         # y(1) = 0
-eps = 0.1
+eps = 0.05
 
 data_dir = "./output"
 model_path = os.path.join(data_dir, f"pinn_model_eps{eps}.pth")
