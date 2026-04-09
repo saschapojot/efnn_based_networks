@@ -7,27 +7,6 @@ from torch.optim.lr_scheduler import StepLR
 import os
 import scipy.special
 from pathlib import Path
-# def w(alpha,beta,x):
-#     return (1-x)**alpha*(1+x)**beta
-
-# def J_and_derivs(n, x):
-#     """
-#     Computes the Jacobi polynomial J_n^{2,2} and its 1st and 2nd derivatives at points x.
-#     """
-#     # Get the Jacobi polynomial object for alpha=2, beta=2
-#     poly = scipy.special.jacobi(n, 2, 2)
-#
-#     # Get the first and second derivative polynomial objects
-#     poly_d1 = poly.deriv(1)
-#     poly_d2 = poly.deriv(2)
-#
-#     # Evaluate the polynomials at x
-#     J_val = poly(x)
-#     dJ_val = poly_d1(x)
-#     d2J_val = poly_d2(x)
-#
-#     return J_val, dJ_val, d2J_val
-
 
 def J_and_derivs(n, x):
     """
@@ -281,10 +260,16 @@ for epoch in range(num_epochs):
         current_lr = scheduler.get_last_lr()[0]
         print(f"Epoch: {epoch:5d}/{num_epochs} | Loss: {loss.item():.6e} | LR: {current_lr:.6e}")
 
+    # Save the model every 1000 epochs
+    if (epoch + 1) % 1000 == 0:
+        checkpoint_path = os.path.join(data_dir, f"model_eps{eps}_epoch{epoch+1}.pth")
+        torch.save(model.state_dict(), checkpoint_path)
+        print(f"Checkpoint saved to {checkpoint_path}")
+
 end_time = datetime.now()
 print(f"Training completed in {end_time - start_time}")
 
-# Save the trained model
+# Save the final trained model
 model_path = os.path.join(data_dir, f"model_eps{eps}.pth")
 torch.save(model.state_dict(), model_path)
-print(f"Model saved to {model_path}")
+print(f"Final model saved to {model_path}")
