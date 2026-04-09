@@ -234,7 +234,7 @@ data_dir = f"./output/num_layers{num_layers}/num_neurons{num_neurons}/N{N}/Q{Q}/
 Path(data_dir).mkdir(exist_ok=True,parents=True)
 
 learning_rate = 1e-3
-learning_rate_final = 1e-4
+learning_rate_final = 1e-5
 weight_decay = 1e-5
 decrease_over = 50
 
