@@ -108,9 +108,9 @@ def precompute_matrices(alpha, beta, N, Q):
 
 eps=0.01
 #Number of test functions (degrees n = 0 to N-1)
-N=400
+N=800
 #Number of quadrature nodes (indices m = 0 to Q-1)
-Q=1000
+Q=2000
 #term 0,2
 x02,weights02, J_mat02, dJ_mat02, d2J_mat02=precompute_matrices(0,2,N,Q)
 #term 1,1
@@ -233,8 +233,8 @@ fb = 2         # y(1) = 2
 data_dir = f"./output/num_layers{num_layers}/num_neurons{num_neurons}/N{N}/Q{Q}/"
 Path(data_dir).mkdir(exist_ok=True,parents=True)
 
-learning_rate = 1e-2
-learning_rate_final = 1e-5
+learning_rate = 1e-3
+learning_rate_final = 1e-4
 weight_decay = 1e-5
 decrease_over = 50
 

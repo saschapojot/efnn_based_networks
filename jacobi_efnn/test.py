@@ -51,8 +51,8 @@ b = 1.0
 fa = 0.0
 fb = 2.0
 eps = 0.01
-N = 400
-Q = 1000
+N = 800
+Q = 2000
 
 # Locate the saved model directory
 data_dir = f"./output/num_layers{num_layers}/num_neurons{num_neurons}/N{N}/Q{Q}/"
