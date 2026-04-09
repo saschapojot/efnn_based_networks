@@ -84,7 +84,7 @@ def precompute_matrices(alpha, beta, N, Q):
         d2J_mat[n, :] = d2J_val
     return x, weights, J_mat, dJ_mat, d2J_mat
 
-
+t_quad_start=datetime.now()
 eps=0.01
 #Number of test functions (degrees n = 0 to N-1)
 N=800
@@ -135,6 +135,8 @@ J_mat22_t = torch.tensor(J_mat22, dtype=torch.float32)
 dJ_mat22_t = torch.tensor(dJ_mat22, dtype=torch.float32)
 d2J_mat22_t = torch.tensor(d2J_mat22, dtype=torch.float32)
 
+t_quad_end=datetime.now()
+print("generating quadrature time: ",t_quad_end-t_quad_start)
 def physical_loss(model):
     """
     computes loss using quadratures
