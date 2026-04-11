@@ -19,6 +19,7 @@ N_vec=[800,1600,3200]
 Q_vec=[2000,4000]
 eps_vec=[1e-3,1e-4]
 epochs=80000
+chunk_size = 100
 layer_neuron_N_Q_eps_vec=[[layer,neuron,N,Q,eps] for layer in num_layers_vec
                       for neuron in num_neurons_vec
                       for N in N_vec
@@ -34,12 +35,14 @@ def contents_to_bash(num_layers,num_neurons,N,Q,eps,file_index):
         "#SBATCH -t 0-80:00\n",
         "#SBATCH -p lzicnormal\n",
         "#SBATCH --mem=50GB\n",
-        f"#SBATCH -o out_jacobi_efnn_layer{num_layers}_neuron{num_neurons}.out\n",
-        f"#SBATCH -e out_jacobi_efnn_layer{num_layers}_neuron{num_neurons}.err\n",
+        f"#SBATCH -o out_jacobi_efnn_layer{num_layers}_neuron{num_neurons}_N{N}_Q{Q}_eps{eps}.out\n",
+        f"#SBATCH -e out_jacobi_efnn_layer{num_layers}_neuron{num_neurons}_N{N}_Q{Q}_eps{eps}.err\n",
         "cd /public/home/hkust_jwliu_1/liuxi/Documents/pyCode/efnn_based_networks/jacobi_efnn\n",
         f"python3 -u train.py {epochs}  {num_layers} {num_neurons} {N} {Q} {eps}\n",
     ]
-    outBashName = outPath + f"/train_hs_efnn_layer{num_layers}_neuron{num_neurons}.sh"
+    out_chunk = outPath + f"/chunk{file_index // chunk_size}/"
+    Path(out_chunk).mkdir(exist_ok=True, parents=True)
+    outBashName = out_chunk + f"/train_hs_efnn_layer{num_layers}_neuron{num_neurons}_N{N}_Q{Q}_eps{eps}.sh"
     with open(outBashName, "w+") as fptr:
         fptr.writelines(contents)
 
