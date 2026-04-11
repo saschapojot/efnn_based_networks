@@ -31,7 +31,7 @@ def contents_to_bash(num_layers,num_neurons,N,Q,eps,file_index):
         "#!/bin/bash\n",
         "#SBATCH -n 5\n",
         "#SBATCH -N 1\n",
-        "#SBATCH -t 0-60:00\n",
+        "#SBATCH -t 0-80:00\n",
         "#SBATCH -p lzicnormal\n",
         "#SBATCH --mem=50GB\n",
         f"#SBATCH -o out_jacobi_efnn_layer{num_layers}_neuron{num_neurons}.out\n",
