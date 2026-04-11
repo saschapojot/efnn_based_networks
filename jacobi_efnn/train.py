@@ -83,13 +83,29 @@ def precompute_matrices(alpha, beta, N, Q):
         dJ_mat[n, :] = dJ_val
         d2J_mat[n, :] = d2J_val
     return x, weights, J_mat, dJ_mat, d2J_mat
+argErrCode = 4
+# sys.argv[0] is the script name, sys.argv[1] is the first argument
+if len(sys.argv) != 7:
+    print("wrong number of arguments")
+    print("example: python train.py num_epochs num_layers num_neurons N Q eps" )
+    exit(argErrCode)
+# Read num_epochs from the first command line argument
+num_epochs = int(sys.argv[1])
+num_layers=int(sys.argv[2])
+num_neurons=int(sys.argv[3])
+
+#Number of test functions (degrees n = 0 to N-1)
+N=int(sys.argv[4])
+#Number of quadrature nodes (indices m = 0 to Q-1)
+Q=int(sys.argv[5])
+
+eps=float(sys.argv[5])
+
+
 
 t_quad_start=datetime.now()
-eps=0.01
-#Number of test functions (degrees n = 0 to N-1)
-N=800
-#Number of quadrature nodes (indices m = 0 to Q-1)
-Q=2000
+
+
 #term 0,2
 x02,weights02, J_mat02, dJ_mat02, d2J_mat02=precompute_matrices(0,2,N,Q)
 #term 1,1
@@ -193,17 +209,9 @@ def physical_loss(model):
 
 
 
-argErrCode = 4
-# sys.argv[0] is the script name, sys.argv[1] is the first argument
-if len(sys.argv) != 4:
-    print("wrong number of arguments")
-    print("example: python train.py num_epochs num_layers num_neurons" )
-    exit(argErrCode)
 
-# Read num_epochs from the first command line argument
-num_epochs = int(sys.argv[1])
-num_layers=int(sys.argv[2])
-num_neurons=int(sys.argv[3])
+
+
 
 in_dim = 1
 a = -1         # Left boundary x = -1
@@ -211,7 +219,7 @@ b = 1.0          # Right boundary x = 1
 fa = 0         # y(0) = 0
 fb = 2         # y(1) = 2
 # Hardcode the directory where the model will be saved
-data_dir = f"./output/num_layers{num_layers}/num_neurons{num_neurons}/N{N}/Q{Q}/"
+data_dir = f"./output/num_layers{num_layers}/num_neurons{num_neurons}/N{N}/Q{Q}/eps{eps}/"
 Path(data_dir).mkdir(exist_ok=True,parents=True)
 
 learning_rate = 1e-3
