@@ -2,7 +2,15 @@ import torch.nn as nn
 import torch
 
 from torch.utils.data import Dataset, DataLoader
+# 1. Define a custom Exponential Activation layer
+class ExpActivation(nn.Module):
+    def forward(self, x):
+        return torch.exp(x)
 
+class SechActivation(nn.Module):
+    def forward(self, x):
+        # sech(x) = 1 / cosh(x)
+        return 1.0 / torch.cosh(x)
 class efnn(nn.Module):
     def __init__(self, in_dim, num_layers, num_neurons,a,b,fa,fb,eps):
         super().__init__()
@@ -18,7 +26,6 @@ class efnn(nn.Module):
             [nn.Sequential(
                 nn.Linear(in_dim if i == 1 else num_neurons, num_neurons),
                 nn.Tanh(),
-                # ReciprocalActivation(),
                 nn.Linear(num_neurons, num_neurons)
             ) for i in range(1, num_layers + 1)]
         )
@@ -33,7 +40,7 @@ class efnn(nn.Module):
         )
         self.quasi_particle_layers.append(nn.Sequential(
             nn.Linear(in_dim, num_neurons),
-            nn.Tanh(),
+            nn.Tanh(), # <-- Replaced nn.Tanh() with ExpActivation()
             nn.Linear(num_neurons, num_neurons)
         ))
 
