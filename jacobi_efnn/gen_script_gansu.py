@@ -14,11 +14,11 @@ if os.path.isdir(outPath):
 Path(outPath).mkdir(exist_ok=True,parents=True)
 
 num_layers_vec=[3,5,7,9,11]
-num_neurons_vec=[20,60,100,140,180]
-N_vec=[800,1600,3200]
-Q_vec=[2000,4000]
-eps_vec=[1e-3,1e-4]
-epochs=80000
+num_neurons_vec=[200,250,300]
+N_vec=[1600]
+Q_vec=[2000]
+eps_vec=[1e-3]
+epochs=50000
 chunk_size = 100
 layer_neuron_N_Q_eps_vec=[[layer,neuron,N,Q,eps] for layer in num_layers_vec
                       for neuron in num_neurons_vec

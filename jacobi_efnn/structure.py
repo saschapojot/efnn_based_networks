@@ -27,11 +27,15 @@ class efnn(nn.Module):
         self.quasi_particle_layers = nn.ModuleList(
             [nn.Sequential(
                 nn.Linear(in_dim, num_neurons),
-                nn.Tanh(),
-                # ReciprocalActivation(),
-                nn.Linear(num_neurons, num_neurons)
-            ) for i in range(1, num_layers + 1)]
+                # nn.Tanh(),
+                # nn.Linear(num_neurons, num_neurons)
+            ) for i in range(1, num_layers)]
         )
+        self.quasi_particle_layers.append(nn.Sequential(
+            nn.Linear(in_dim, num_neurons),
+            nn.Tanh(),
+            nn.Linear(num_neurons, num_neurons)
+        ))
 
     def forward(self, x):
         self.a=self.a.to(x.device)

@@ -55,7 +55,7 @@ N = 800
 Q = 2000
 
 # Locate the saved model directory
-data_dir = f"./output/num_layers{num_layers}/num_neurons{num_neurons}/N{N}/Q{Q}/"
+data_dir = f"./output_eps{eps}/num_layers{num_layers}/num_neurons{num_neurons}/N{N}/Q{Q}/"
 model_path = os.path.join(data_dir, f"model_eps{eps}.pth")
 
 if not os.path.exists(model_path):
