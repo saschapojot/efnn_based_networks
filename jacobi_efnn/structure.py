@@ -34,27 +34,24 @@ class efnn(nn.Module):
         self.quasi_particle_layers = nn.ModuleList(
             [nn.Sequential(
                 nn.Linear(in_dim, num_neurons),
-                # nn.Tanh(),
-                # nn.Linear(num_neurons, num_neurons)
-            ) for i in range(1, num_layers)]
+                nn.Tanh(),
+                nn.Linear(num_neurons, num_neurons)
+            ) for i in range(1, num_layers+1)]
         )
-        self.quasi_particle_layers.append(nn.Sequential(
-            nn.Linear(in_dim, num_neurons),
-            nn.Tanh(), # <-- Replaced nn.Tanh() with ExpActivation()
-            nn.Linear(num_neurons, num_neurons)
-        ))
+
 
     def forward(self, x):
         self.a=self.a.to(x.device)
         self.b=self.b.to(x.device)
         self.fa=self.fa.to(x.device)
         self.fb=self.fb.to(x.device)
-        S = x
+        y=x-self.a
+        S = y
         for i in range(1, self.num_layers + 1):
             # Compute effective field layer Fi
             Fi = self.effective_field_layers[i - 1](S)
             # Compute quasi-particle layer Si
-            Si = self.quasi_particle_layers[i - 1](x) * Fi
+            Si = self.quasi_particle_layers[i - 1](y) * Fi
             # Update S for the next layer
             S = Si
 
@@ -68,9 +65,15 @@ class efnn(nn.Module):
         # When x = b, dist_right = 0, so this term becomes exactly fb
         boundary_interp = (dist_right * self.fa + dist_left * self.fb) / (self.b - self.a)
         # 2. Network Contribution (Zero at boundaries)
-        # Multiplying E_raw by (dist_left * dist_right) ensures the network's
-        # output is zeroed out at x=a and x=b.
-        E_final = boundary_interp + (dist_left * dist_right) * E_raw
+        # Instead of multiplying by dist_left (which suppresses the network linearly),
+        # we use an exponential boundary layer modifier.
+        # This evaluates to exactly 0 at x = a, but rises sharply with a gradient of 1/eps,
+        # naturally capturing the singularly perturbed boundary layer without forcing
+        # the network to output massive values.
+        bl_modifier = 1.0 - torch.exp(-dist_left / self.eps)
+
+        # We keep dist_right as is, because there is no steep boundary layer at x = b.
+        E_final = boundary_interp + (bl_modifier * dist_right) * E_raw
 
         return E_final
 
